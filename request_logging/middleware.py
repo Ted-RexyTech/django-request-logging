@@ -10,7 +10,7 @@ except ImportError:
     from django.core.urlresolvers import resolve, Resolver404
 from django.utils.termcolors import colorize
 
-DEFAULT_LOG_LEVEL = logging.DEBUG
+DEFAULT_LOG_LEVEL = logging.INFO
 DEFAULT_HTTP_4XX_LOG_LEVEL = logging.ERROR
 DEFAULT_COLORIZE = True
 DEFAULT_MAX_BODY_LENGTH = 5000  # log no more than 3k bytes of content
