@@ -190,10 +190,10 @@ class LoggingMiddleware(object):
                 # First 30 characters are "multipart/form-data; boundary="
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
-                self._log_multipart('params: ' + json.loads(
+                self._log_multipart(json.loads(
                     request.body), logging_context)
             else:
-                self.logger.log(self.log_level,'params: ' + json.loads(
+                self.logger.log(self.log_level, json.loads(
                     request.body), logging_context)
 
     def process_response(self, request, response):
@@ -276,7 +276,7 @@ class LoggingMiddleware(object):
                 # So the idea here is to just _not_ log it.
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
-                self.logger.log(level,'params: ' +  json.loads(response.content),
+                self.logger.log(level, json.loads(response.content),
                                 logging_context)
 
     def _chunked_to_max(self, msg):
