@@ -50,9 +50,9 @@ class ColourLogger(Logger):
     def log(self, level, msg, logging_context, is_request):
         colour = None
         if is_request:
-            colour = "cyan"
+            colour = "white"
         else:
-            colour = "magenta"
+            colour = "green"
         self._log(level, msg, colour, logging_context)
 
     def log_error(self, level, msg, logging_context):
