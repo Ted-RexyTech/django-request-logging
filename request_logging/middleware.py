@@ -115,6 +115,7 @@ class LoggingMiddleware(object):
     def __call__(self, request):
         self.process_request(request)
         response = self.get_response(request)
+        print('response: ', response)
         self.process_response(request, response)
         return response
 
@@ -193,12 +194,12 @@ class LoggingMiddleware(object):
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
                 # Ted modify: parse request.body
-                self._log_multipart(json.loads(
-                    request.body), logging_context)
+                self._log_multipart('request params: ' + str(json.loads(
+                    request.body)), logging_context)
             else:
                 # Ted modify: parse request.body
-                self.logger.log(self.log_level, json.loads(
-                    request.body), logging_context)
+                self.logger.log('request params: ' + str(json.loads(
+                    request.body)), logging_context)
 
     def process_response(self, request, response):
         resp_log = "{} {} - {}".format(request.method,
@@ -215,11 +216,11 @@ class LoggingMiddleware(object):
             # if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
             #     # default, log as per 5xx
             #     self.logger.log_error(logging.INFO, resp_log, logging_context)
-                # self._log_resp(logging.ERROR, response, logging_context)
+            # self._log_resp(logging.ERROR, response, logging_context)
             # else:
-                # self.logger.log(self.http_4xx_log_level,
-                #                 resp_log, logging_context)
-                self._log_resp(self.log_level, response, logging_context)
+            # self.logger.log(self.http_4xx_log_level,
+            #                 resp_log, logging_context)
+            self._log_resp(self.log_level, response, logging_context)
         elif response.status_code in range(500, 600):
             # Ted modify: disable response url
             # self.logger.log_error(logging.INFO, resp_log, logging_context)
@@ -284,8 +285,9 @@ class LoggingMiddleware(object):
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
                 # Ted modify: parse response.content
-                self.logger.log(level, json.loads(response.content),
-                                logging_context)
+                self.logger.log(level, 'request params: ' + str(json.loads(
+                    response.content)),
+                    logging_context)
 
     def _chunked_to_max(self, msg):
         return msg[0:self.max_body_length]
