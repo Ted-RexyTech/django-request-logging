@@ -197,11 +197,11 @@ class LoggingMiddleware(object):
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
                 # Ted modify: parse request.body
-                self._log_multipart(f'Request: \n{json.loads(
+                self._log_multipart(f'Request: {json.loads(
                     response.content)}', logging_context, True)
             else:
                 # Ted modify: parse request.body
-                self.logger.log(self.log_level, f'Request: \n{json.loads(
+                self.logger.log(self.log_level, f'Request: {json.loads(
                     response.content)}', logging_context, True)
 
     def process_response(self, request, response):
@@ -287,7 +287,7 @@ class LoggingMiddleware(object):
             # So the idea here is to just _not_ log it.
             self.logger.log(level, '(data_stream)', logging_context)
         else:
-            self.logger.log(level, f'Response: \n{strjson.loads(
+            self.logger.log(level, f'Response: {strjson.loads(
                 response.content)}',
                 logging_context, False)
 
