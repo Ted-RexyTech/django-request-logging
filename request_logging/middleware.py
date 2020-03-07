@@ -198,11 +198,11 @@ class LoggingMiddleware(object):
             if is_multipart:
                 # Ted modify: parse request.body
                 self._log_multipart(
-                    f'Request: \n{json.loads(response.content)}', logging_context, True)
+                    f'Request: \n{json.loads(request.body)}', logging_context, True)
             else:
                 # Ted modify: parse request.body
                 self.logger.log(
-                    self.log_level, f'Request: \n{json.loads(response.content)}', logging_context, True)
+                    self.log_level, f'Request: \n{json.loads(request.body)}', logging_context, True)
 
     def process_response(self, request, response):
         resp_log = "{} {} - {}".format(request.method,
@@ -287,8 +287,8 @@ class LoggingMiddleware(object):
             # So the idea here is to just _not_ log it.
             self.logger.log(level, '(data_stream)', logging_context)
         else:
-            self.logger.log(level, f'Response: \n{strjson.loads(response.content)}',
-                logging_context, False)
+            self.logger.log(level, f'Response: \n{json.loads(response.content)}',
+                            logging_context, False)
 
     def _chunked_to_max(self, msg):
         return msg[0:self.max_body_length]
