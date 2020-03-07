@@ -71,7 +71,7 @@ class LoggingMiddleware(object):
             settings, SETTING_NAMES['log_level'], DEFAULT_LOG_LEVEL)
         # self.http_4xx_log_level = getattr(
         #     settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
-        # Ted modify: disable response header
+        # Ted modify: disable request header
         # self.sensitive_headers = getattr(
         #     settings, SETTING_NAMES['sensitive_headers'], DEFAULT_SENSITIVE_HEADERS)
         # if not isinstance(self.sensitive_headers, list):
@@ -213,17 +213,20 @@ class LoggingMiddleware(object):
         if response.status_code in range(400, 500):
             if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
                 # default, log as per 5xx
+                # Ted modify: disable response url
                 # self.logger.log_error(logging.INFO, resp_log, logging_context)
                 self._log_resp(logging.ERROR, response, logging_context)
             else:
+                # Ted modify: disable response url
                 # self.logger.log(self.http_4xx_log_level,
                 #                 resp_log, logging_context)
                 self._log_resp(self.log_level, response, logging_context)
         elif response.status_code in range(500, 600):
+            # Ted modify: disable response url
             # self.logger.log_error(logging.INFO, resp_log, logging_context)
             self._log_resp(logging.ERROR, response, logging_context)
-        Ted modify: disable response url
         else:
+            # Ted modify: disable response url
             # self.logger.log(logging.INFO, resp_log, logging_context)
             self._log_resp(self.log_level, response, logging_context)
 
@@ -281,7 +284,7 @@ class LoggingMiddleware(object):
                 # So the idea here is to just _not_ log it.
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
-                # Ted modify: parse request.body
+                # Ted modify: parse response.content
                 self.logger.log(level, json.loads(response.content),
                                 logging_context)
 
