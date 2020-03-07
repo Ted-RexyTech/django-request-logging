@@ -82,7 +82,7 @@ class LoggingMiddleware(object):
         for log_attr in ('log_level', 'http_4xx_log_level'):
             level = getattr(self, log_attr)
             if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
-                            logging.CUSTOMINFO
+                             logging.CUSTOMINFO,
                              logging.WARNING, logging.ERROR, logging.CRITICAL]:
                 raise ValueError("Unknown log level({}) in setting({})".format(
                     level, SETTING_NAMES[log_attr]))
