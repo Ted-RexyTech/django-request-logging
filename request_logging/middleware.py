@@ -10,7 +10,7 @@ except ImportError:
     from django.core.urlresolvers import resolve, Resolver404
 from django.utils.termcolors import colorize
 
-DEFAULT_LOG_LEVEL = logging.CRITICAL
+DEFAULT_LOG_LEVEL = logging.INFO
 DEFAULT_HTTP_4XX_LOG_LEVEL = logging.ERROR
 DEFAULT_COLORIZE = True
 DEFAULT_MAX_BODY_LENGTH = 5000  # log no more than 3k bytes of content
@@ -190,10 +190,10 @@ class LoggingMiddleware(object):
                 # First 30 characters are "multipart/form-data; boundary="
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
-                self._log_multipart(self._chunked_to_max(
+                self._log_multipart(json.loads(response.content)(
                     request.body), logging_context)
             else:
-                self.logger.log(self.log_level, self._chunked_to_max(
+                self.logger.log(self.log_level, json.loads(response.content)(
                     request.body), logging_context)
 
     def process_response(self, request, response):
