@@ -277,7 +277,12 @@ class LoggingMiddleware(object):
             self.logger.log(self.log_level, part, logging_context)
 
     def _log_resp(self, level, response, logging_context):
+        print('0 : response print:', str(json.loads(
+            response.content)))
         print('1')
+        print('1.5: ', re.match('^application/json',
+                                response.get('Content-Type', ''), re.I))
+        print('1.6', response.get('Content-Type', ''))
         if re.match('^application/json', response.get('Content-Type', ''), re.I):
             print('2')
             self.logger.log(level, response._headers, logging_context)
@@ -292,7 +297,7 @@ class LoggingMiddleware(object):
             else:
                 print('5')
                 # Ted modify: parse response.content
-                print('response print:', str(json.loads(
+                print('6 : response print:', str(json.loads(
                     response.content)))
                 self.logger.log(level, 'response params: ' + str(json.loads(
                     response.content)),
