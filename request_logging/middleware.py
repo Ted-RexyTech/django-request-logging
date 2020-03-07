@@ -198,7 +198,7 @@ class LoggingMiddleware(object):
                     request.body)), logging_context)
             else:
                 # Ted modify: parse request.body
-                self.logger.log('request params: ' + str(json.loads(
+                self.logger.log(self.log_level, 'request params: ' + str(json.loads(
                     request.body)), logging_context)
 
     def process_response(self, request, response):
