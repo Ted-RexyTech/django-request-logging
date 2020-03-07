@@ -173,10 +173,10 @@ class LoggingMiddleware(object):
         #
         logging_context = self._get_logging_context(request, None)
         # self.logger.log(logging.INFO, method_path, logging_context)
-        # Ted modify: disable response header
+        # Ted modify: disable request header
         # self._log_request_headers(request, logging_context)
         self._log_request_body(request, logging_context)
-    # Ted modify: disable response header
+    # Ted modify: disable request header
     # def _log_request_headers(self, request, logging_context):
     #     headers = {k: v if k not in self.sensitive_headers else '*****' for k,
     #                v in request.META.items() if k.startswith('HTTP_')}
@@ -211,13 +211,12 @@ class LoggingMiddleware(object):
         logging_context = self._get_logging_context(request, response)
 
         if response.status_code in range(400, 500):
-            if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
-                # default, log as per 5xx
-                # Ted modify: disable response url
-                # self.logger.log_error(logging.INFO, resp_log, logging_context)
-                self._log_resp(logging.ERROR, response, logging_context)
-            else:
-                # Ted modify: disable response url
+            # Ted modify: disable response url
+            # if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
+            #     # default, log as per 5xx
+            #     self.logger.log_error(logging.INFO, resp_log, logging_context)
+                # self._log_resp(logging.ERROR, response, logging_context)
+            # else:
                 # self.logger.log(self.http_4xx_log_level,
                 #                 resp_log, logging_context)
                 self._log_resp(self.log_level, response, logging_context)
