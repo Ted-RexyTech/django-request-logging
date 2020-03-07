@@ -47,8 +47,12 @@ class ColourLogger(Logger):
         self.log_colour = log_colour
         self.log_error_colour = log_error_colour
 
-    def log(self, level, msg, logging_context):
-        colour = self.log_error_colour if level >= logging.ERROR else self.log_colour
+    def log(self, level, msg, logging_context, is_request):
+        colour = None
+        if is_request:
+            colour = "cyan"
+        else:
+            colour = "magenta"
         self._log(level, msg, colour, logging_context)
 
     def log_error(self, level, msg, logging_context):
@@ -193,12 +197,12 @@ class LoggingMiddleware(object):
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
                 # Ted modify: parse request.body
-                self._log_multipart('request params: ' + str(json.loads(
-                    request.body)), logging_context)
+                self._log_multipart(f'Request: \n{str(json.loads(
+                    response.content))}', logging_context, True)
             else:
                 # Ted modify: parse request.body
-                self.logger.log(self.log_level, 'request params: ' + str(json.loads(
-                    request.body)), logging_context)
+                self.logger.log(self.log_level, f'Request: \n{str(json.loads(
+                    response.content))}', logging_context, True)
 
     def process_response(self, request, response):
         resp_log = "{} {} - {}".format(request.method,
@@ -283,9 +287,9 @@ class LoggingMiddleware(object):
             # So the idea here is to just _not_ log it.
             self.logger.log(level, '(data_stream)', logging_context)
         else:
-            self.logger.log(level, 'response params: ' + str(json.loads(
-                response.content)),
-                logging_context)
+            self.logger.log(level, f'Response: \n{str(json.loads(
+                response.content))}',
+                logging_context, False)
 
     def _chunked_to_max(self, msg):
         return msg[0:self.max_body_length]
