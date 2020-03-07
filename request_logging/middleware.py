@@ -190,10 +190,10 @@ class LoggingMiddleware(object):
                 # First 30 characters are "multipart/form-data; boundary="
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
-                self._log_multipart(json.loads(response.content)(
+                self._log_multipart(json.loads(
                     request.body), logging_context)
             else:
-                self.logger.log(self.log_level, json.loads(response.content)(
+                self.logger.log(self.log_level, json.loads(
                     request.body), logging_context)
 
     def process_response(self, request, response):
