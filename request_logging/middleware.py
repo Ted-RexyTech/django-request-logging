@@ -276,7 +276,7 @@ class LoggingMiddleware(object):
                 # So the idea here is to just _not_ log it.
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
-                self.logger.log(level, json.loads(response.content)
+                self.logger.log(level, json.loads(response.content),
                                 logging_context)
 
     def _chunked_to_max(self, msg):
