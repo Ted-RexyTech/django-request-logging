@@ -69,8 +69,9 @@ class LoggingMiddleware(object):
 
         self.log_level = getattr(
             settings, SETTING_NAMES['log_level'], DEFAULT_LOG_LEVEL)
-        self.http_4xx_log_level = getattr(
-            settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
+        # self.http_4xx_log_level = getattr(
+        # settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
+        # Ted modify: disable response header
         # self.sensitive_headers = getattr(
         #     settings, SETTING_NAMES['sensitive_headers'], DEFAULT_SENSITIVE_HEADERS)
         # if not isinstance(self.sensitive_headers, list):
@@ -79,12 +80,12 @@ class LoggingMiddleware(object):
         #             SETTING_NAMES['sensitive_headers'], self.sensitive_headers)
         #     )
 
-        for log_attr in ('log_level', 'http_4xx_log_level'):
-            level = getattr(self, log_attr)
-            if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
-                             logging.WARNING, logging.ERROR, logging.CRITICAL]:
-                raise ValueError("Unknown log level({}) in setting({})".format(
-                    level, SETTING_NAMES[log_attr]))
+        # for log_attr in ('log_level', 'http_4xx_log_level'):
+        #     level = getattr(self, log_attr)
+        #     if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
+        #                      logging.WARNING, logging.ERROR, logging.CRITICAL]:
+        #         raise ValueError("Unknown log level({}) in setting({})".format(
+        #             level, SETTING_NAMES[log_attr]))
 
         # TODO: remove deprecated legacy settings
         enable_colorize = getattr(
@@ -168,13 +169,14 @@ class LoggingMiddleware(object):
                         " (not logged because '" + reason + "')", no_log_context)
 
     def _log_request(self, request):
-        method_path = "{} {}".format(request.method, request.get_full_path())
-
-        logging_context = self._get_logging_context(request, None)
-        self.logger.log(logging.INFO, method_path, logging_context)
+        # method_path = "{} {}".format(request.method, request.get_full_path())
+        #
+        # logging_context = self._get_logging_context(request, None)
+        # self.logger.log(logging.INFO, method_path, logging_context)
+        # Ted modify: disable response header
         # self._log_request_headers(request, logging_context)
         self._log_request_body(request, logging_context)
-
+    # Ted modify: disable response header
     # def _log_request_headers(self, request, logging_context):
     #     headers = {k: v if k not in self.sensitive_headers else '*****' for k,
     #                v in request.META.items() if k.startswith('HTTP_')}
@@ -190,9 +192,11 @@ class LoggingMiddleware(object):
                 # First 30 characters are "multipart/form-data; boundary="
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
+                # Ted modify: parse request.body
                 self._log_multipart(json.loads(
                     request.body), logging_context)
             else:
+                # Ted modify: parse request.body
                 self.logger.log(self.log_level, json.loads(
                     request.body), logging_context)
 
@@ -218,6 +222,7 @@ class LoggingMiddleware(object):
         elif response.status_code in range(500, 600):
             self.logger.log_error(logging.INFO, resp_log, logging_context)
             self._log_resp(logging.ERROR, response, logging_context)
+        # Ted modify: disable response url
         # else:
             # self.logger.log(logging.INFO, resp_log, logging_context)
             # self._log_resp(self.log_level, response, logging_context)
@@ -276,6 +281,7 @@ class LoggingMiddleware(object):
                 # So the idea here is to just _not_ log it.
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
+                # Ted modify: parse request.body
                 self.logger.log(level, json.loads(response.content),
                                 logging_context)
 
