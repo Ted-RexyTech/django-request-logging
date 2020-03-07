@@ -115,7 +115,6 @@ class LoggingMiddleware(object):
     def __call__(self, request):
         self.process_request(request)
         response = self.get_response(request)
-        print('response: ', response)
         self.process_response(request, response)
         return response
 
@@ -227,9 +226,7 @@ class LoggingMiddleware(object):
         # else:
         #     self.logger.log(logging.INFO, resp_log, logging_context)
         #     self._log_resp(self.log_level, response, logging_context)
-        print('response.status_code: ', response.status_code)
         if response.status_code == 200:
-            print('response.status_code == 200: ', response.status_code == 200)
             self._log_resp(self.log_level, response, logging_context)
 
         return response
@@ -277,18 +274,18 @@ class LoggingMiddleware(object):
             self.logger.log(self.log_level, part, logging_context)
 
     def _log_resp(self, level, response, logging_context):
-                # Ted modify: parse response.content
-            self.logger.log(level, response._headers, logging_context)
-            if response.streaming:
-                # There's a chance that if it's streaming it's because large and it might hit
-                # the max_body_length very often. Not to mention that StreamingHttpResponse
-                # documentation advises to iterate only once on the content.
-                # So the idea here is to just _not_ log it.
-                self.logger.log(level, '(data_stream)', logging_context)
-            else:
-                self.logger.log(level, 'response params: ' + str(json.loads(
-                    response.content)),
-                    logging_context)
+        # Ted modify: parse response.content
+        # self.logger.log(level, response._headers, logging_context)
+        if response.streaming:
+            # There's a chance that if it's streaming it's because large and it might hit
+            # the max_body_length very often. Not to mention that StreamingHttpResponse
+            # documentation advises to iterate only once on the content.
+            # So the idea here is to just _not_ log it.
+            self.logger.log(level, '(data_stream)', logging_context)
+        else:
+            self.logger.log(level, 'response params: ' + str(json.loads(
+                response.content)),
+                logging_context)
 
     def _chunked_to_max(self, msg):
         return msg[0:self.max_body_length]
