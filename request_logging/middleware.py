@@ -277,7 +277,7 @@ class LoggingMiddleware(object):
 
     def _log_resp(self, level, response, logging_context):
         if re.match('^application/json', response.get('Content-Type', ''), re.I):
-            # self.logger.log(level, response._headers, logging_context)
+            self.logger.log(level, response._headers, logging_context)
             if response.streaming:
                 # There's a chance that if it's streaming it's because large and it might hit
                 # the max_body_length very often. Not to mention that StreamingHttpResponse
@@ -286,7 +286,9 @@ class LoggingMiddleware(object):
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
                 # Ted modify: parse response.content
-                self.logger.log(level, 'request params: ' + str(json.loads(
+                print('response print:', str(json.loads(
+                    response.content)))
+                self.logger.log(level, 'response params: ' + str(json.loads(
                     response.content)),
                     logging_context)
 
