@@ -10,7 +10,7 @@ except ImportError:
     from django.core.urlresolvers import resolve, Resolver404
 from django.utils.termcolors import colorize
 
-DEFAULT_LOG_LEVEL = logging.CUSTOMINFO
+DEFAULT_LOG_LEVEL = logging.CRITICAL
 DEFAULT_HTTP_4XX_LOG_LEVEL = logging.ERROR
 DEFAULT_COLORIZE = True
 DEFAULT_MAX_BODY_LENGTH = 5000  # log no more than 3k bytes of content
@@ -82,7 +82,6 @@ class LoggingMiddleware(object):
         for log_attr in ('log_level', 'http_4xx_log_level'):
             level = getattr(self, log_attr)
             if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
-                             logging.CUSTOMINFO,
                              logging.WARNING, logging.ERROR, logging.CRITICAL]:
                 raise ValueError("Unknown log level({}) in setting({})".format(
                     level, SETTING_NAMES[log_attr]))
