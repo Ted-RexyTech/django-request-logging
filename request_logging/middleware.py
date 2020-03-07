@@ -70,7 +70,7 @@ class LoggingMiddleware(object):
         self.log_level = getattr(
             settings, SETTING_NAMES['log_level'], DEFAULT_LOG_LEVEL)
         # self.http_4xx_log_level = getattr(
-        # settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
+        #     settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
         # Ted modify: disable response header
         # self.sensitive_headers = getattr(
         #     settings, SETTING_NAMES['sensitive_headers'], DEFAULT_SENSITIVE_HEADERS)
@@ -213,19 +213,19 @@ class LoggingMiddleware(object):
         if response.status_code in range(400, 500):
             if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
                 # default, log as per 5xx
-                self.logger.log_error(logging.INFO, resp_log, logging_context)
+                # self.logger.log_error(logging.INFO, resp_log, logging_context)
                 self._log_resp(logging.ERROR, response, logging_context)
             else:
-                self.logger.log(self.http_4xx_log_level,
-                                resp_log, logging_context)
+                # self.logger.log(self.http_4xx_log_level,
+                #                 resp_log, logging_context)
                 self._log_resp(self.log_level, response, logging_context)
         elif response.status_code in range(500, 600):
-            self.logger.log_error(logging.INFO, resp_log, logging_context)
+            # self.logger.log_error(logging.INFO, resp_log, logging_context)
             self._log_resp(logging.ERROR, response, logging_context)
-        # Ted modify: disable response url
-        # else:
+        Ted modify: disable response url
+        else:
             # self.logger.log(logging.INFO, resp_log, logging_context)
-            # self._log_resp(self.log_level, response, logging_context)
+            self._log_resp(self.log_level, response, logging_context)
 
         return response
 
