@@ -17,11 +17,11 @@ DEFAULT_MAX_BODY_LENGTH = 5000  # log no more than 3k bytes of content
 DEFAULT_SENSITIVE_HEADERS = ['HTTP_AUTHORIZATION', 'HTTP_PROXY_AUTHORIZATION']
 SETTING_NAMES = {
     'log_level': 'REQUEST_LOGGING_DATA_LOG_LEVEL',
-    # 'http_4xx_log_level': 'REQUEST_LOGGING_HTTP_4XX_LOG_LEVEL',
-    # 'legacy_colorize': 'REQUEST_LOGGING_DISABLE_COLORIZE',
-    # 'colorize': 'REQUEST_LOGGING_ENABLE_COLORIZE',
-    # 'max_body_length': 'REQUEST_LOGGING_MAX_BODY_LENGTH',
-    # 'sensitive_headers': 'REQUEST_LOGGING_SENSITIVE_HEADERS',
+    'http_4xx_log_level': 'REQUEST_LOGGING_HTTP_4XX_LOG_LEVEL',
+    'legacy_colorize': 'REQUEST_LOGGING_DISABLE_COLORIZE',
+    'colorize': 'REQUEST_LOGGING_ENABLE_COLORIZE',
+    'max_body_length': 'REQUEST_LOGGING_MAX_BODY_LENGTH',
+    'sensitive_headers': 'REQUEST_LOGGING_SENSITIVE_HEADERS',
 }
 BINARY_REGEX = re.compile(
     r'(.+Content-Type:.*?)(\S+)/(\S+)(?:\r\n)*(.+)', re.S | re.I)
