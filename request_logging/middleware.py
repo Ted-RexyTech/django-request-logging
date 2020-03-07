@@ -277,28 +277,15 @@ class LoggingMiddleware(object):
             self.logger.log(self.log_level, part, logging_context)
 
     def _log_resp(self, level, response, logging_context):
-        print('0 : response print:', str(json.loads(
-            response.content)))
-        print('1')
-        print('1.5: ', re.match('^application/json',
-                                response.get('Content-Type', ''), re.I))
-        print('1.6', response.get('Content-Type', ''))
-        if re.match('^application/json', response.get('Content-Type', ''), re.I):
-            print('2')
+                # Ted modify: parse response.content
             self.logger.log(level, response._headers, logging_context)
-            print('3')
             if response.streaming:
-                print('4')
                 # There's a chance that if it's streaming it's because large and it might hit
                 # the max_body_length very often. Not to mention that StreamingHttpResponse
                 # documentation advises to iterate only once on the content.
                 # So the idea here is to just _not_ log it.
                 self.logger.log(level, '(data_stream)', logging_context)
             else:
-                print('5')
-                # Ted modify: parse response.content
-                print('6 : response print:', str(json.loads(
-                    response.content)))
                 self.logger.log(level, 'response params: ' + str(json.loads(
                     response.content)),
                     logging_context)
