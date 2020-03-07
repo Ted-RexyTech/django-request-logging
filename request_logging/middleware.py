@@ -50,9 +50,9 @@ class ColourLogger(Logger):
     def log(self, level, msg, logging_context, is_request):
         colour = None
         if is_request:
-            colour = "white"
-        else:
             colour = "green"
+        else:
+            colour = "cyan"
         self._log(level, msg, colour, logging_context)
 
     def log_error(self, level, msg, logging_context):
@@ -287,7 +287,7 @@ class LoggingMiddleware(object):
             # So the idea here is to just _not_ log it.
             self.logger.log(level, '(data_stream)', logging_context)
         else:
-            self.logger.log(level, f'Response: \n{json.loads(response.content)}',
+            self.logger.log(level, json.loads(response.content),
                             logging_context, False)
 
     def _chunked_to_max(self, msg):
