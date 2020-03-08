@@ -219,11 +219,11 @@ class LoggingMiddleware(object):
             if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
                 # default, log as per 5xx
                 self.logger.log_error(logging.INFO, resp_log, logging_context)
-            self._log_resp(logging.ERROR, response, logging_context)
+                self._log_resp(logging.ERROR, response, logging_context)
             else:
-            self.logger.log(self.http_4xx_log_level,
+                self.logger.log(self.http_4xx_log_level,
                             resp_log, logging_context)
-            self._log_resp(self.log_level, response, logging_context)
+                self._log_resp(self.log_level, response, logging_context)
         elif response.status_code in range(500, 600):
             self.logger.log_error(logging.INFO, resp_log, logging_context)
             self._log_resp(logging.ERROR, response, logging_context)
