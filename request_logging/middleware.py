@@ -73,23 +73,22 @@ class LoggingMiddleware(object):
 
         self.log_level = getattr(
             settings, SETTING_NAMES['log_level'], DEFAULT_LOG_LEVEL)
-        # self.http_4xx_log_level = getattr(
-        #     settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
-        # Ted modify: disable request header
-        # self.sensitive_headers = getattr(
-        #     settings, SETTING_NAMES['sensitive_headers'], DEFAULT_SENSITIVE_HEADERS)
-        # if not isinstance(self.sensitive_headers, list):
-        #     raise ValueError(
-        #         "{} should be list. {} is not list.".format(
-        #             SETTING_NAMES['sensitive_headers'], self.sensitive_headers)
-        #     )
+        self.http_4xx_log_level = getattr(
+            settings, SETTING_NAMES['http_4xx_log_level'], DEFAULT_HTTP_4XX_LOG_LEVEL)
+        self.sensitive_headers = getattr(
+            settings, SETTING_NAMES['sensitive_headers'], DEFAULT_SENSITIVE_HEADERS)
+        if not isinstance(self.sensitive_headers, list):
+            raise ValueError(
+                "{} should be list. {} is not list.".format(
+                    SETTING_NAMES['sensitive_headers'], self.sensitive_headers)
+            )
 
-        # for log_attr in ('log_level', 'http_4xx_log_level'):
-        #     level = getattr(self, log_attr)
-        #     if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
-        #                      logging.WARNING, logging.ERROR, logging.CRITICAL]:
-        #         raise ValueError("Unknown log level({}) in setting({})".format(
-        #             level, SETTING_NAMES[log_attr]))
+        for log_attr in ('log_level', 'http_4xx_log_level'):
+            level = getattr(self, log_attr)
+            if level not in [logging.NOTSET, logging.DEBUG, logging.INFO,
+                             logging.WARNING, logging.ERROR, logging.CRITICAL]:
+                raise ValueError("Unknown log level({}) in setting({})".format(
+                    level, SETTING_NAMES[log_attr]))
 
         # TODO: remove deprecated legacy settings
         enable_colorize = getattr(
@@ -222,7 +221,7 @@ class LoggingMiddleware(object):
                 self._log_resp(logging.ERROR, response, logging_context)
             else:
                 self.logger.log(self.http_4xx_log_level,
-                            resp_log, logging_context)
+                                resp_log, logging_context)
                 self._log_resp(self.log_level, response, logging_context)
         elif response.status_code in range(500, 600):
             self.logger.log_error(logging.INFO, resp_log, logging_context)
