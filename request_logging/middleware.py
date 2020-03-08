@@ -214,7 +214,7 @@ class LoggingMiddleware(object):
             return response
         logging_context = self._get_logging_context(request, response)
 
-        Ted modify: disable response url
+        # Ted modify: disable response url
         if response.status_code in range(400, 500):
             if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
                 # default, log as per 5xx
