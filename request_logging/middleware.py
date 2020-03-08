@@ -197,12 +197,8 @@ class LoggingMiddleware(object):
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
                 # Ted modify: parse request.body
-                try:
-                    data = json.loads(request.body)
-                    self._log_multipart(
-                        f'Request: \n{data}', logging_context, True)
-                except:
-
+                self._log_multipart(
+                    f'Request: \n{json.loads(request.body)}', logging_context, True)
             else:
                 # Ted modify: parse request.body
                 self.logger.log(
