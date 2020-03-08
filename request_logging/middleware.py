@@ -196,12 +196,23 @@ class LoggingMiddleware(object):
                 self.boundary = '--' + content_type[30:]
             if is_multipart:
                 # Ted modify: parse request.body
-                self._log_multipart(
-                    f'Request: \n{json.loads(request.body)}', logging_context, True)
+                try:
+                    data = json.loads(request.body)
+                    self._log_multipart(
+                        f'Request: \n{data}', logging_context, True)
+                except:
+                    self._log_multipart(
+                        f'Invalid data.', logging_context, True)
+
             else:
                 # Ted modify: parse request.body
-                self.logger.log(
-                    self.log_level, f'Request: \n{json.loads(request.body)}', logging_context, True)
+                try:
+                    data = json.loads(request.body)
+                    self.logger.log(
+                        self.log_level, f'Request: \n{data}', logging_context, True)
+                except:
+                    self.logger.log(
+                        self.log_level, f'Invalid data.', logging_context, True)
 
     def process_response(self, request, response):
         resp_log = "{} {} - {}".format(request.method,
@@ -214,7 +225,7 @@ class LoggingMiddleware(object):
         logging_context = self._get_logging_context(request, response)
 
         # Ted modify: disable response url
-        print('response.status_code: ' , response.status_code)
+        print('response.status_code: ', response.status_code)
         if response.status_code in range(400, 500):
             if self.http_4xx_log_level == DEFAULT_HTTP_4XX_LOG_LEVEL:
                 # default, log as per 5xx
