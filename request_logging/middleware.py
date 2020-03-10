@@ -202,7 +202,7 @@ class LoggingMiddleware(object):
                         f'Request: \n{data}', logging_context, True)
                 except:
                     self._log_multipart(
-                        f'Invalid data.', logging_context, True)
+                        f'Cannot parse json param.', logging_context, True)
 
             else:
                 # Ted modify: parse request.body
@@ -212,7 +212,7 @@ class LoggingMiddleware(object):
                         self.log_level, f'Request: \n{data}', logging_context, True)
                 except:
                     self.logger.log(
-                        self.log_level, f'Invalid data.', logging_context, True)
+                        self.log_level, f'Cannot parse json param.', logging_context, True)
 
     def process_response(self, request, response):
         resp_log = "{} {} - {}".format(request.method,
@@ -300,7 +300,7 @@ class LoggingMiddleware(object):
                 self.logger.log(level, f'Response: \n{json.loads(data)}',
                             logging_context, False)
             except:
-                self.logger.log(level, f'Invalid data.',
+                self.logger.log(level, f'Cannot parse json param.',
                             logging_context, False)
 
     def _chunked_to_max(self, msg):
